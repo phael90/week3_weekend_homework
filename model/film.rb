@@ -1,7 +1,7 @@
 require_relative('../db/sql_runner')
 class Film
+  attr_writer :title, :price
   attr_reader :id
-
   def initialize(option)
     @id = option['id'].to_i if option['id']
     @title = option['title']
@@ -21,4 +21,15 @@ class Film
     return array_of_hashes_film.map{|film| Film.new(film)}
   end
 
+  def update()
+    sql = "UPDATE films SET (title, price) = ($1, $2) WHERE id = $3"
+    values = [@title, @price, @id]
+    array_of_hashes_film = SqlRunner.run(sql, values)
+  end
+
+  def delete()
+    sql = "DELETE FROM films WHERE id = $1"
+    values = [@id]
+    SqlRunner.run(sql, values)
+  end
 end

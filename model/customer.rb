@@ -1,6 +1,6 @@
 require_relative('../db/sql_runner')
 class Customer
-
+attr_writer :name, :funds
 attr_reader :id
 
   def initialize(option)
@@ -21,4 +21,21 @@ attr_reader :id
     array_of_hashes_customer = SqlRunner.run(sql)
     return array_of_hashes_customer.map{ |customer| Customer.new(customer) }
   end
+
+  def update()
+    sql = "UPDATE customers SET (name, funds) = ($1, $2) WHERE id = $3"
+    values = [@name, @funds, @id]
+    array_of_hashes_customer = SqlRunner.run(sql, values)
+  end
+
+  def delete()
+    sql = "DELETE FROM customers WHERE id = $1"
+    values = [@id]
+    SqlRunner.run(sql, values)
+
+  end
+
+  # def delete_all()
+  #   sql = "DELETE * FROM customers"
+  # end
 end
