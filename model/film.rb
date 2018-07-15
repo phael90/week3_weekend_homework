@@ -1,7 +1,7 @@
 require_relative('../db/sql_runner')
 class Film
   attr_writer :title, :price
-  attr_reader :id
+  attr_reader :id, :price
   def initialize(option)
     @id = option['id'].to_i if option['id']
     @title = option['title']
@@ -31,5 +31,12 @@ class Film
     sql = "DELETE FROM films WHERE id = $1"
     values = [@id]
     SqlRunner.run(sql, values)
+  end
+
+  def customers()
+    sql = "SELECT customers.* FROM customers INNER JOIN tickets ON tickets.customer_id = customers.id WHERE tickets.film_id = $1"
+    values = [@id]
+    customer = SqlRunner.run(sql, values)
+    return customer.map{|customer| Customer.new(customer)}
   end
 end
